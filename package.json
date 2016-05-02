@@ -1,0 +1,35 @@
+{
+  "name": "readfrom",
+  "description": "Read text content from different endpoints.",
+  "version": "0.0.1-alpha",
+  "keywords": [
+    "readfrom",
+    "stdin",
+    "file",
+    "url",
+    "clipboard",
+    "promises"
+  ],
+  "author": {
+    "name": "Louis T.",
+    "email": "louist@ltdev.im",
+    "web": "https://ltdev.im/"
+  },
+  "contributors": [],
+  "dependencies": {},
+  "devDependencies": {},
+  "bugs": {
+    "web": "https://github.com/LouisT/ReadFrom/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LouisT/ReadFrom.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "scripts": {},
+  "main": "index.js",
+  "homepage": "https://github.com/LouisT/ReadFrom",
+}
