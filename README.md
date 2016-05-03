@@ -22,7 +22,14 @@ ReadFrom().url('https://example.com/').then(function (data) {
    console.trace(error);
 });
 
+// Desktop only feature.
+ReadFrom().clipboard().then(function (data) {
+   console.log(data); // Print whatever is in your clipboard.
+ }).catch(function (error) {
+   console.trace(error);
+});
 ```
 
 TODO:
 * Create documentation.
+* Add tests with mocha.
