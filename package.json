@@ -1,13 +1,15 @@
 {
   "name": "readfrom",
   "description": "Read text content from different endpoints.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "keywords": [
     "readfrom",
     "stdin",
+    "stdout",
     "file",
     "url",
     "clipboard",
+    "spawn",
     "promises"
   ],
   "author": {

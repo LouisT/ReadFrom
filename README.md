@@ -28,6 +28,14 @@ ReadFrom().clipboard().then(function (data) {
  }).catch(function (error) {
    console.trace(error);
 });
+
+// Read STDOUT from child_process.spawn()
+// https://nodejs.org/dist/latest/docs/api/child_process.html#child_process_child_process_spawn_command_args_options
+ReadFrom().spawn('top', ['-n 1', '-b']).then(function (data) {
+   console.log(data); // Print a single iteration of the linux `top` command.
+ }).catch(function (error) {
+   console.trace(error);
+});
 ```
 
 TODO:
