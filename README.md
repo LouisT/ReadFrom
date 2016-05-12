@@ -41,3 +41,4 @@ ReadFrom().spawn('top', ['-n 1', '-b']).then(function (data) {
 TODO:
 * Create documentation.
 * Add tests with mocha.
+* Make the use of `ES6 Promise` better.
