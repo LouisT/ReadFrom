@@ -36,6 +36,18 @@ ReadFrom().spawn('top', ['-n 1', '-b']).then(function (data) {
  }).catch(function (error) {
    console.trace(error);
 });
+
+// Create a readable stream number counter.
+var Readable = require('stream').Readable,
+    Stream = new Readable;
+Stream._read = (function (c, m) {
+   return function () { this.push((c <= m ? Buffer.from(String(c++)) : null)); }
+})(0, 50);
+ReadFrom().stream(Stream).then(function (data) {
+   console.log(data); // Print the numbers, from the counter stream.
+ }).catch(function (error) {
+   console.trace(error);
+});
 ```
 
 TODO:
