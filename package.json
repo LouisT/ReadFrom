@@ -1,7 +1,7 @@
 {
   "name": "readfrom",
   "description": "Read text content from different endpoints.",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "keywords": [
     "readfrom",
     "stdin",
@@ -11,7 +11,8 @@
     "clipboard",
     "spawn",
     "promises",
-    "stream"
+    "stream",
+    "ssh"
   ],
   "author": {
     "name": "Louis T.",
@@ -19,7 +20,9 @@
     "web": "https://ltdev.im/"
   },
   "contributors": [],
-  "dependencies": {},
+  "dependencies": {
+    "ssh2": "^0.5.4"
+  },
   "devDependencies": {},
   "bugs": {
     "web": "https://github.com/LouisT/ReadFrom/issues"

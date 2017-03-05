@@ -48,6 +48,26 @@ ReadFrom().stream(Stream).then(function (data) {
  }).catch(function (error) {
    console.trace(error);
 });
+
+// Read STDOUT/STDERR from a (non-interactive) remote SSH server connection, using ssh2.
+//   NOTE: Supports all options for ssh2. https://github.com/mscdex/ssh2
+//         Returns: { stdout: <String>, stderr: <String>, code: <Int>, signal: <String|Undefined> }
+var obj = {
+    host: 'server.domain.tld',
+    port: 22,
+    username: 'USERNAME',
+    password: 'PASSWORD',
+    // privateKey: require('fs').readFileSync('/path/to/key')
+};
+// Add spaces to output: uptime ; echo "" ; NOTAREALCOMMAND ; echo "" ; free -m ; echo "" ; ALSONOTACOMMAND
+ReadFrom().ssh('uptime ; NOTAREALCOMMAND ; free -m ; ALSONOTACOMMAND', obj).then(function (results) {
+    console.log('/* STDOUT */\n', results.stdout);
+    if (results.stderr) {
+       console.warn('\n/* STDERR */\n', results.stderr);
+    }
+ }).catch(function (error) {
+    console.trace(error);
+});
 ```
 
 TODO:
