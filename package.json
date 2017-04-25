@@ -1,7 +1,7 @@
 {
   "name": "readfrom",
   "description": "Read text content from different endpoints.",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "keywords": [
     "readfrom",
     "stdin",

@@ -74,3 +74,4 @@ TODO:
 * Create documentation.
 * Add tests with mocha.
 * Make the use of `ES6 Promise` better.
+* Update to ES6.
