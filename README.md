@@ -81,3 +81,4 @@ TODO:
 * Update "quick examples" to ES6.
 * Create documentation.
 * Add tests with mocha.
+* Improve `./libs/DataFactory.js`.
