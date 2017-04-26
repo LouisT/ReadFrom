@@ -1,29 +1,35 @@
-# ReadFrom
+# ReadFrom (WIP convert to ES6, see TODO below)
 Read text content from different endpoints with Node.js.
 
 #### Quick examples:
 ```javascript
-ReadFrom().file('file.txt').then(function (data) {
+// Initiate the ReadFrom instance. Alternative:
+//    var ReadFrom = require('readfrom'),
+//        RF = new ReadFrom();
+var ReadFrom = new (require('readfrom'))();
+
+// Read from a file.
+ReadFrom.file('file.txt').then(function (data) {
    console.log(data);
  }).catch(function (error) {
    console.trace(error);
 });
 
 // echo "This is an example." | node stdin-example.js
-ReadFrom().stdin().then(function (data) {
+ReadFrom.stdin().then(function (data) {
    console.log(data); // `This is an example.`
  }).catch(function (error) {
    console.trace(error);
 });
 
-ReadFrom().url('https://example.com/').then(function (data) {
+ReadFrom.url('https://example.com/').then(function (data) {
    console.log(data); // Print the example.com HTML content.
  }).catch(function (error) {
    console.trace(error);
 });
 
 // Desktop only feature.
-ReadFrom().clipboard().then(function (data) {
+ReadFrom.clipboard().then(function (data) {
    console.log(data); // Print whatever is in your clipboard.
  }).catch(function (error) {
    console.trace(error);
@@ -31,7 +37,7 @@ ReadFrom().clipboard().then(function (data) {
 
 // Read STDOUT from child_process.spawn()
 // https://nodejs.org/dist/latest/docs/api/child_process.html#child_process_child_process_spawn_command_args_options
-ReadFrom().spawn('top', ['-n 1', '-b']).then(function (data) {
+ReadFrom.spawn('top', ['-n 1', '-b']).then(function (data) {
    console.log(data); // Print a single iteration of the linux `top` command.
  }).catch(function (error) {
    console.trace(error);
@@ -43,7 +49,7 @@ var Readable = require('stream').Readable,
 Stream._read = (function (c, m) {
    return function () { this.push((c <= m ? Buffer.from(String(c++)) : null)); }
 })(0, 50);
-ReadFrom().stream(Stream).then(function (data) {
+ReadFrom.stream(Stream).then(function (data) {
    console.log(data); // Print the numbers, from the counter stream.
  }).catch(function (error) {
    console.trace(error);
@@ -60,7 +66,7 @@ var obj = {
     // privateKey: require('fs').readFileSync('/path/to/key')
 };
 // Add spaces to output: uptime ; echo "" ; NOTAREALCOMMAND ; echo "" ; free -m ; echo "" ; ALSONOTACOMMAND
-ReadFrom().ssh('uptime ; NOTAREALCOMMAND ; free -m ; ALSONOTACOMMAND', obj).then(function (results) {
+ReadFrom.ssh('uptime ; NOTAREALCOMMAND ; free -m ; ALSONOTACOMMAND', obj).then(function (results) {
     console.log('/* STDOUT */\n', results.stdout);
     if (results.stderr) {
        console.warn('\n/* STDERR */\n', results.stderr);
@@ -71,6 +77,7 @@ ReadFrom().ssh('uptime ; NOTAREALCOMMAND ; free -m ; ALSONOTACOMMAND', obj).then
 ```
 
 TODO:
+* Add: ReadFrom.url, ReadFrom.ssh
+* Update "quick examples" to ES6.
 * Create documentation.
 * Add tests with mocha.
-* Make the use of `ES6 Promise` better.
