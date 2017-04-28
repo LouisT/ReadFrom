@@ -74,6 +74,36 @@ ReadFrom.ssh('uptime ; NOTAREALCOMMAND ; free -m ; ALSONOTACOMMAND', obj).then(f
  }).catch(function (error) {
     console.trace(error);
 });
+
+
+// Read from a TCP socket. (echo "This is an example!" | nc 127.0.0.1 8080)
+ReadFrom.port(8080, { address: '127.0.0.1' }).then((data) => {
+    console.log(data);
+ }).catch((error) => {
+    console.log(error);
+});
+
+// Read from a TCP socket, line by line. (cat file.txt | nc 127.0.0.1 8080)
+// Address defaults to 0.0.0.0!
+ReadFrom.port(8080, { address: '127.0.0.1' }, (line) => {
+    console.log("LINE: %s", line);
+ }).then(function () {
+    console.log("\nFinished!");
+ }).catch((error) => {
+    console.log(error);
+});
+
+// Read from a UNIX socket, line by line. (cat file.txt | nc -U /tmp/ReadFrom.sock)
+// NOTE: This also works without line by line parsing, by returning with a Promise.
+//       ReadFrom.unixSocket('/tmp/my-socket.sock').then((data) => { }).catch(() => { })
+ReadFrom.unixSocket(undefined, undefined, (line) => {
+    console.log("LINE: %s", line);
+ }).then(function () {
+    console.log("\nFinished!");
+ }).catch((error) => {
+    console.log(error);
+});
+
 ```
 
 TODO:
