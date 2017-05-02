@@ -9,38 +9,66 @@ Read text content from different endpoints with Node.js.
 var ReadFrom = new (require('readfrom'))();
 
 // Read from a file.
-ReadFrom.file('file.txt').then(function (data) {
+ReadFrom.file('file.txt').then((data) => {
    console.log(data);
- }).catch(function (error) {
+ }).catch((error) => {
    console.trace(error);
 });
 
-// echo "This is an example." | node stdin-example.js
-ReadFrom.stdin().then(function (data) {
+// Read from a file, line by line.
+ReadFrom.file('file.txt', undefined, (line) => {
+   console.log('LINE: %s', line);
+});
+
+// Read from STDIN. (echo "This is an example." | node stdin-example.js)
+ReadFrom.stdin().then((data) =>
    console.log(data); // `This is an example.`
- }).catch(function (error) {
+ }).catch((error) => {
    console.trace(error);
 });
 
-ReadFrom.url('https://example.com/').then(function (data) {
+// Read from STDIN, line by line. (cat file.txt | node stdin-by-line.js)
+ReadFrom.stdin(undefined, (line) => {
+   console.log('LINE: %s', line);
+});
+
+// Read from a URL.
+ReadFrom.url('https://example.com/').then((data) => {
    console.log(data); // Print the example.com HTML content.
- }).catch(function (error) {
+ }).catch((error) => {
    console.trace(error);
 });
 
-// Desktop only feature.
-ReadFrom.clipboard().then(function (data) {
+// Read from a URL, line by line.
+ReadFrom.url('https://example.com/', undefined, (line) => {
+   console.log('LINE: %s', line);
+});
+
+// Read from clipboard.
+ReadFrom.clipboard().then((data) => {
    console.log(data); // Print whatever is in your clipboard.
- }).catch(function (error) {
+ }).catch((error) => {
    console.trace(error);
 });
+
+// Read from clipboard, line by line.
+ReadFrom.clipboard(undefined, (line) => {
+   console.log('LINE: %s', line);
+});
+
 
 // Read STDOUT from child_process.spawn()
 // https://nodejs.org/dist/latest/docs/api/child_process.html#child_process_child_process_spawn_command_args_options
-ReadFrom.spawn('top', ['-n 1', '-b']).then(function (data) {
+ReadFrom.spawn('top', ['-n 1', '-b']).then((data) => {
    console.log(data); // Print a single iteration of the linux `top` command.
- }).catch(function (error) {
+ }).catch((error) => {
    console.trace(error);
+});
+
+// Read STDOUT from child_process.spawn(), line by line.
+// https://nodejs.org/dist/latest/docs/api/child_process.html#child_process_child_process_spawn_command_args_options
+ReadFrom.spawn('top', ['-n 1', '-b'], undefined, (line) => {
+   console.log('LINE: %s', line); // Print a single iteration of the linux `top` command.
 });
 
 // Create a readable stream number counter.
@@ -55,28 +83,18 @@ ReadFrom.stream(Stream).then(function (data) {
    console.trace(error);
 });
 
-// Read STDOUT/STDERR from a (non-interactive) remote SSH server connection, using ssh2.
-//   NOTE: Supports all options for ssh2. https://github.com/mscdex/ssh2
-//         Returns: { stdout: <String>, stderr: <String>, code: <Int>, signal: <String|Undefined> }
-var obj = {
-    host: 'server.domain.tld',
-    port: 22,
-    username: 'USERNAME',
-    password: 'PASSWORD',
-    // privateKey: require('fs').readFileSync('/path/to/key')
-};
-// Add spaces to output: uptime ; echo "" ; NOTAREALCOMMAND ; echo "" ; free -m ; echo "" ; ALSONOTACOMMAND
-ReadFrom.ssh('uptime ; NOTAREALCOMMAND ; free -m ; ALSONOTACOMMAND', obj).then(function (results) {
-    console.log('/* STDOUT */\n', results.stdout);
-    if (results.stderr) {
-       console.warn('\n/* STDERR */\n', results.stderr);
-    }
- }).catch(function (error) {
-    console.trace(error);
+// Create a readable stream number counter, with new lines for lineParser.
+var Readable = require('stream').Readable,
+    Stream = new Readable;
+Stream._read = ((c, m) => {
+    return () => { Stream.push((c <= m ? Buffer.from(String([c++, "\n"].join(''))) : null)); };
+})(0, 50);
+ReadFrom.stream(Stream, undefined, (num) => {
+   console.log(num);
 });
 
-
 // Read from a TCP socket. (echo "This is an example!" | nc 127.0.0.1 8080)
+// Address defaults to 0.0.0.0!
 ReadFrom.port(8080, { address: '127.0.0.1' }).then((data) => {
     console.log(data);
  }).catch((error) => {
@@ -86,9 +104,9 @@ ReadFrom.port(8080, { address: '127.0.0.1' }).then((data) => {
 // Read from a TCP socket, line by line. (cat file.txt | nc 127.0.0.1 8080)
 // Address defaults to 0.0.0.0!
 ReadFrom.port(8080, { address: '127.0.0.1' }, (line) => {
-    console.log("LINE: %s", line);
+    console.log('LINE: %s', line);
  }).then(function () {
-    console.log("\nFinished!");
+    console.log('\nFinished!');
  }).catch((error) => {
     console.log(error);
 });
@@ -97,9 +115,9 @@ ReadFrom.port(8080, { address: '127.0.0.1' }, (line) => {
 // NOTE: This also works without line by line parsing, by returning with a Promise.
 //       ReadFrom.unixSocket('/tmp/my-socket.sock').then((data) => { }).catch(() => { })
 ReadFrom.unixSocket(undefined, undefined, (line) => {
-    console.log("LINE: %s", line);
+    console.log('LINE: %s', line);
  }).then(function () {
-    console.log("\nFinished!");
+    console.log('\nFinished!');
  }).catch((error) => {
     console.log(error);
 });
@@ -107,8 +125,7 @@ ReadFrom.unixSocket(undefined, undefined, (line) => {
 ```
 
 TODO:
-* Add: ReadFrom.url, ReadFrom.ssh
+* Add: ReadFrom.ssh
 * Update "quick examples" to ES6.
 * Create documentation.
 * Add tests with mocha.
-* Improve `./libs/DataFactory.js`.
