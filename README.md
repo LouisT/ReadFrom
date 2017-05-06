@@ -112,6 +112,7 @@ ReadFrom.port(8080, { address: '127.0.0.1' }, (line) => {
 });
 
 // Read from a UNIX socket, line by line. (cat file.txt | nc -U /tmp/ReadFrom.sock)
+//
 // NOTE: This also works without line by line parsing, by returning with a Promise.
 //       ReadFrom.unixSocket('/tmp/my-socket.sock').then((data) => { }).catch(() => { })
 ReadFrom.unixSocket(undefined, undefined, (line) => {
@@ -122,10 +123,34 @@ ReadFrom.unixSocket(undefined, undefined, (line) => {
     console.log(error);
 });
 
+// Read from an SSH server. If `trim` is true, run String.trim() on the results.
+// If `empty` is true allow the return of empty data. 'Commands' can be a string or array.
+// If `combine` is passed in SSH options, the commands Array will be joined by that string. (;, &&, etc.)
+//    {Instance}.ssh(<Commands>, <SSH Options>[, <Options>]).then(<FN>).catch(<FN>)
+//
+//    NOTE: The Promise returns an Array with the following object(s):
+//          { stdout: <String>, stderr: <String>, code: <Int>, signal: <String|Undefined> }
+
+// Supports all options for ssh2. https://github.com/mscdex/ssh2
+var obj = {
+    host: 'server.domain.tld',
+    port: 22,
+    username: 'USERNAME',
+    password: 'PASSWORD',
+    // privateKey: require('fs').readFileSync('/path/to/key')
+    combine: ';'
+};
+ReadFrom.ssh(['uptime', 'notacommand', 'free -m', 'df -h', 'uname -a'], obj).then(function (results) {
+    console.log(results);
+ }).catch(function (error) {
+    console.trace(error);
+});
 ```
 
 TODO:
-* Add: ReadFrom.ssh
+* Add: ~~ReadFrom.ssh~~, ~~ReadFRom.url~~, ReadFrom.random
+  * Improve `ReadFrom.ssh`
 * Update "quick examples" to ES6.
 * Create documentation.
 * Add tests with mocha.
+* Improve/comment `./libs/SSHPromise.js'
