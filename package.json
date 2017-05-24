@@ -23,7 +23,9 @@
   "dependencies": {
     "ssh2": "^0.5.4"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "mocha": "^3.4.2"
+  },
   "bugs": {
     "web": "https://github.com/LouisT/ReadFrom/issues"
   },
@@ -33,9 +35,11 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=6.4.0"
+    "node": ">=6.0.0"
   },
-  "scripts": {},
+  "scripts": {
+    "test": "mocha"
+  },
   "main": "index.js",
   "homepage": "https://github.com/LouisT/ReadFrom"
 }

@@ -1,4 +1,4 @@
-# ReadFrom (WIP convert to ES6, see TODO below)
+# ReadFrom [![Build Status](https://travis-ci.org/LouisT/ReadFrom.svg?branch=master)](https://travis-ci.org/LouisT/ReadFrom)
 Read text content from different endpoints with Node.js.
 
 #### Quick examples:
@@ -74,12 +74,12 @@ ReadFrom.spawn('top', ['-n 1', '-b'], undefined, (line) => {
 // Create a readable stream number counter.
 var Readable = require('stream').Readable,
     Stream = new Readable;
-Stream._read = (function (c, m) {
-   return function () { this.push((c <= m ? Buffer.from(String(c++)) : null)); }
+Stream._read = ((c, m) => {
+   return () => { Stream.push((c <= m ? Buffer.from(String(c++)) : null)); }
 })(0, 50);
-ReadFrom.stream(Stream).then(function (data) {
+ReadFrom.stream(Stream).then((data) => {
    console.log(data); // Print the numbers, from the counter stream.
- }).catch(function (error) {
+ }).catch((error) => {
    console.trace(error);
 });
 
@@ -105,7 +105,7 @@ ReadFrom.port(8080, { address: '127.0.0.1' }).then((data) => {
 // Address defaults to 0.0.0.0!
 ReadFrom.port(8080, { address: '127.0.0.1' }, (line) => {
     console.log('LINE: %s', line);
- }).then(function () {
+ }).then(() => {
     console.log('\nFinished!');
  }).catch((error) => {
     console.log(error);
@@ -117,7 +117,7 @@ ReadFrom.port(8080, { address: '127.0.0.1' }, (line) => {
 //       ReadFrom.unixSocket('/tmp/my-socket.sock').then((data) => { }).catch(() => { })
 ReadFrom.unixSocket(undefined, undefined, (line) => {
     console.log('LINE: %s', line);
- }).then(function () {
+ }).then(() => {
     console.log('\nFinished!');
  }).catch((error) => {
     console.log(error);
@@ -140,17 +140,42 @@ var obj = {
     // privateKey: require('fs').readFileSync('/path/to/key')
     combine: ';'
 };
-ReadFrom.ssh(['uptime', 'notacommand', 'free -m', 'df -h', 'uname -a'], obj).then(function (results) {
+ReadFrom.ssh(['uptime', 'notacommand', 'free -m', 'df -h', 'uname -a'], obj).then((results) => {
     console.log(results);
- }).catch(function (error) {
+ }).catch((error) => {
     console.trace(error);
+});
+
+// Read random X bytes from crypto.randomBytes() as a Buffer, which can be converted
+// with toString(<encoding>).
+//    {Instance}.random(<Byte count>).then(<FN>).catch(<FN>)
+ReadFrom.random(256).then((results) => {
+    console.log(results.toString('hex')); // Convert Buffer to hex of random bytes.
+ }).catch((error) => {
+    console.trace(error);
+});
+
+// Pass `encoding` in options for random() to convert with toString BEFORE returning.
+ReadFrom.random(256, { encoding: 'base64' }).then((results) => {
+    console.log(results); // base64 of random bytes.
+ }).catch((error) => {
+    console.trace(error);
+});
+
+// Pass chunkSize to create an array of buffers. This example creates an array with 4
+// indexes, each containing a buffer of 256 bytes. Can be combined with `encoding`.
+ReadFrom.random(1024, { chunkSize: 256 }).then((bytes) => {
+   console.log(bytes, bytes.length);
+ }).catch((error) => {
+   console.log(error);
 });
 ```
 
 TODO:
-* Add: ~~ReadFrom.ssh~~, ~~ReadFRom.url~~, ReadFrom.random
-  * Improve `ReadFrom.ssh`
+* Add: ~~ReadFrom.ssh~~, ~~ReadFRom.url~~, ~~ReadFrom.random~~
+  * Improve/comment `ReadFrom.ssh`.
 * Update "quick examples" to ES6.
 * Create documentation.
-* Add tests with mocha.
+* ~~Add tests with mocha.~~
+  * Improve/finish tests for travis-ci.
 * Improve/comment `./libs/SSHPromise.js'
