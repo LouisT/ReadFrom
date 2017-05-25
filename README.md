@@ -174,7 +174,7 @@ ReadFrom.random(1024, { chunkSize: 256 }).then((bytes) => {
 TODO:
 * Add: ~~ReadFrom.ssh~~, ~~ReadFRom.url~~, ~~ReadFrom.random~~
   * Improve/comment `ReadFrom.ssh`.
-* Update "quick examples" to ES6.
+* ~~Update "quick examples" to ES6.~~
 * Create documentation.
 * ~~Add tests with mocha.~~
   * Improve/finish tests for travis-ci.
