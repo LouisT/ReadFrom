@@ -21,7 +21,7 @@
   },
   "contributors": [],
   "dependencies": {
-    "ssh2": "^0.5.4"
+    "ssh2": "^0.8.9"
   },
   "devDependencies": {
     "mocha": "^3.4.2"
