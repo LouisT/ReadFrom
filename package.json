@@ -24,7 +24,7 @@
     "ssh2": "^0.5.4"
   },
   "devDependencies": {
-    "mocha": "^3.4.2"
+    "mocha": "^8.0.1"
   },
   "bugs": {
     "web": "https://github.com/LouisT/ReadFrom/issues"
